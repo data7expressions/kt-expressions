@@ -3,7 +3,7 @@ package h3lp
 open class H3lp {
     val http: HttpHelper
     val validator: Validator
-    val obj: ObjectHelper 
+    val obj: ObjectHelper
     constructor() {
         this.http = HttpHelper()
         this.validator = Validator()

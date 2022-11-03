@@ -26,7 +26,7 @@ class ObjectHelper(val http: HttpHelper, val validator: Validator) {
                 val index = name.toIntOrNull()
                 if (index != null) {
                     @Suppress("UNCHECKED_CAST") 
-					value = (value as List<Any>)[index]
+                    value = (value as List<Any>)[index]
                     continue
                 }
                 @Suppress("UNCHECKED_CAST") val array = value as List<Map<String, Any>>
@@ -70,10 +70,10 @@ class ObjectHelper(val http: HttpHelper, val validator: Validator) {
                 }
                 if (i == level) {
                     @Suppress("UNCHECKED_CAST") 
-					(data as Array<Any>)[index] = value
+                    (data as Array<Any>)[index] = value
                 } else {
                     @Suppress("UNCHECKED_CAST") 
-					data = (data as Array<Any>)[index]
+                    data = (data as Array<Any>)[index]
                 }
             } else {
                 @Suppress("UNCHECKED_CAST") val map = data as MutableMap<String, Any>

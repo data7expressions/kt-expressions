@@ -12,19 +12,22 @@ class Data(val data: MutableMap<String, Any>, val parent: Data? = null) {
     fun getData(variable: String): MutableMap<String, Any>? {
         if (this.data.get(variable) != null || this.parent !is Data) {
             return this.data
-        } val _data = this.parent.getData(variable)
+        } 
+        val _data = this.parent.getData(variable)
         return if (_data == null) _data else this.data
     }
 
     fun contains(name: String): Boolean {
         val names = name.split('.')
-        var value = this.getData(names[0]) for (n in names) {
+        var value = this.getData(names[0])
+        for (n in names) {
             if (value == null || !value.containsKey(n)) {
                 return false
             }
             @Suppress("UNCHECKED_CAST")
             value = value.get(n) as MutableMap<String, Any>?
-        } return true
+        } 
+        return true
     }
 
     fun get(name: String): Any? {
