@@ -1,0 +1,9 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "[kotlin]": {
+        "editor.defaultFormatter": "esafirm.kotlin-formatter"
+    },
+    "[kotlinscript]": {
+        "editor.defaultFormatter": "cstef.kotlin-formatter"
+    }
+}

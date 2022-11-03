@@ -6,7 +6,7 @@
             "request": "launch",
             "name": "Kotlin Launch",
             "projectRoot": "${workspaceFolder}/lib",
-            "mainClass": "expressions/Labkt",
+            "mainClass": "expression.expressionkt",
             "preLaunchTask": "build"
         }
     ]
