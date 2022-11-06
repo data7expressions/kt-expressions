@@ -55,7 +55,7 @@ class ObjectHelper(val http: HttpHelper, val validator: Validator) {
         return value
     }
 
-    fun setValue(source: Any, _name: String, value: Any): Boolean {
+    fun setValue(source: Any, _name: String, value: Any ?): Boolean {
         val names = _name.split('.')
         val level = names.size - 1
         var data = source
@@ -70,13 +70,13 @@ class ObjectHelper(val http: HttpHelper, val validator: Validator) {
                 }
                 if (i == level) {
                     @Suppress("UNCHECKED_CAST") 
-                    (data as Array<Any>)[index] = value
+                    (data as Array<Any?>)[index] = value
                 } else {
                     @Suppress("UNCHECKED_CAST") 
                     data = (data as Array<Any>)[index]
                 }
             } else {
-                @Suppress("UNCHECKED_CAST") val map = data as MutableMap<String, Any>
+                @Suppress("UNCHECKED_CAST") val map = data as MutableMap<String, Any?>
                 if (i == level) {
                     map.set(name, value)
                 } else if (map.containsKey(name)) {

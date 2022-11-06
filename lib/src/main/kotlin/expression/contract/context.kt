@@ -3,13 +3,13 @@ import h3lp.h3lp
 import java.util.*
 import java.util.ArrayDeque
 
-class Data(val data: MutableMap<String, Any>, val parent: Data? = null) {
+class Data(val data: MutableMap<String, Any?>, val parent: Data? = null) {
 
     fun newData(): Data {
-        return Data(mutableMapOf<String, Any>(), this)
+        return Data(mutableMapOf<String, Any?>(), this)
     }
 
-    fun getData(variable: String): MutableMap<String, Any>? {
+    fun getData(variable: String): MutableMap<String, Any?>? {
         if (this.data.get(variable) != null || this.parent !is Data) {
             return this.data
         } 
@@ -25,12 +25,12 @@ class Data(val data: MutableMap<String, Any>, val parent: Data? = null) {
                 return false
             }
             @Suppress("UNCHECKED_CAST")
-            value = value.get(n) as MutableMap<String, Any>?
+            value = value.get(n) as MutableMap<String, Any?>?
         } 
         return true
     }
 
-    fun get(name: String): Any? {
+    fun get(name: String): Any ? {
         val names = h3lp.obj.names(name)
         val data = this.getData(names[0])
         if (data == null) {
@@ -39,7 +39,7 @@ class Data(val data: MutableMap<String, Any>, val parent: Data? = null) {
         return h3lp.obj.getValue(data, name)
     }
 
-    fun set(name: String, value: Any): Boolean {
+    fun set(name: String, value: Any ?): Boolean {
         val names = h3lp.obj.names(name)
         val data = this.getData(names[0])
         if (data == null) {
@@ -48,7 +48,7 @@ class Data(val data: MutableMap<String, Any>, val parent: Data? = null) {
         return h3lp.obj.setValue(data, name, value)
     }
 
-    fun init(name: String, value: Any) {
+    fun init(name: String, value: Any ?) {
         this.data.set(name, value)
     }
 }
@@ -98,7 +98,7 @@ class Context {
     val parent: Context?
 
     constructor (data: Data? = null, token: Token? = null, parent: Context? = null) {
-        this.data = if (data != null) data else Data(mutableMapOf<String, Any>())
+        this.data = if (data != null) data else Data(mutableMapOf<String, Any ?>())
         this.token = if (token != null) token else Token()
         this.parent = parent
     }

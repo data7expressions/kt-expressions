@@ -42,7 +42,7 @@ data class OperatorAdditionalInfo(val priority: Int, val doc: OperatorDoc?)
 data class FunctionAdditionalInfo(val deterministic: Boolean?, val doc: OperatorDoc?)
 
 interface IEvaluator {
-    fun eval(context: Context): Any
+    fun eval(context: Context): Any ?
 }
 
 interface IPrototypeEvaluator : IEvaluator {
@@ -71,7 +71,7 @@ class Operand {
         this.children = children
         this.returnType = returnType
     }
-    fun eval(context: Context): Any {
+    fun eval(context: Context): Any ? {
         if (this.evaluator == null) {
             throw Exception("Evaluator not implemented")
         }
