@@ -5,7 +5,7 @@ import com.flaviolionelrita.h3lp.h3lp
 
 class Parser {
 	private val model:IModelManager	
-	private var positions: List<Pair<Char, Pair<Int,Int>>> = emptyList()
+	private var positions: List<Pair<Char, Position>> = emptyList()
 	private var buffer: List<Char>
 	private var length: Int=0
 	private var index: Int=0
@@ -41,12 +41,12 @@ class Parser {
 		}
 	}
 
-    private fun normalize (expression: String): ArrayList<Pair<Char, Pair<Int,Int>>> {
+    private fun normalize (expression: String): ArrayList<Pair<Char, Position>> {
 		var isString = false
 		var quotes:Char = ' '
 		val buffer = expression.toCharArray().toTypedArray()
 		val length = buffer.size
-		val result = arrayListOf<Pair<Char, Pair<Int,Int>>>()
+		val result = arrayListOf<Pair<Char, Position>>()
 		var line = 0
 		var col = 0
 		var i = 0
@@ -60,12 +60,12 @@ class Parser {
 				quotes = p
 			}
 			if (isString) {
-				result.add(Pair(p ,Pair(line, col)))
+				result.add(Pair(p ,Position(line, col)))
 			} else if (p == ' ') {
 				// Only leave spaces when it's between alphanumeric characters.
 				// for example in the case of "} if" there should not be a space
 				if (i + 1 < length && i - 1 >= 0 && h3lp.validator.isAlphanumeric(buffer[i - 1]) && h3lp.validator.isAlphanumeric(buffer[i + 1])) {
-					result.add(Pair(p, Pair(line, col)))
+					result.add(Pair(p, Position(line, col)))
 				}
 			// when there is a block that ends with "}" and then there is an enter , replace the enter with ";"
 			// TODO: si estamos dentro de un objecto NO debería agregar ; luego de } sino rompe el obj
@@ -75,7 +75,7 @@ class Parser {
 				line++
 				col = 0
 			} else if (p != '\r' && p != '\t') {
-				result.add(Pair(p, Pair(line, col)))
+				result.add(Pair(p, Position(line, col)))
 			}
 			i++
 			col++
@@ -99,7 +99,7 @@ class Parser {
 		return this.buffer[this.index + offset]
 	}
 
-	private fun pos (offset:Int = 0): Pair<Int, Int> {
+	private fun pos (offset:Int = 0): Position {
 		return this.positions[this.index - offset].second
 	}
 
@@ -161,7 +161,7 @@ class Parser {
 		if (operands.size == 1){
 			return operands[0] 
 		} else {
-			return Operand(Pair(0, 0), "block", OperandType.Block, operands)
+			return Operand(Position(0, 0), "block", OperandType.Block, operands)
 		}
 	}
 
@@ -350,13 +350,13 @@ class Parser {
 		}
 
 		operand = this.solveChain(operand, pos)
-		if (isNegative) operand = Operand(Pair(pos.first, pos.second - 1), "-", OperandType.Operator, arrayListOf(operand))
-		if (isNot) operand = Operand(Pair(pos.first, pos.second - 1), "!", OperandType.Operator, arrayListOf(operand))
-		if (isBitNot) operand = Operand(Pair(pos.first, pos.second - 1), "~", OperandType.Operator, arrayListOf(operand))
+		if (isNegative) operand = Operand(Position(pos.ln, pos.col - 1), "-", OperandType.Operator, arrayListOf(operand))
+		if (isNot) operand = Operand(Position(pos.ln, pos.col - 1), "!", OperandType.Operator, arrayListOf(operand))
+		if (isBitNot) operand = Operand(Position(pos.ln, pos.col - 1), "~", OperandType.Operator, arrayListOf(operand))
 		return operand
 	}
 
-	private fun solveChain (operand: Operand, pos:Pair<Int,Int>): Operand {
+	private fun solveChain (operand: Operand, pos:Position): Operand {
 		if (this.end) {
 			return operand
 		}
@@ -453,7 +453,7 @@ class Parser {
 		return args
 	}
 
-	private fun getObject (pos:Pair<Int,Int>): Operand {
+	private fun getObject (pos:Position): Operand {
 		val attributes = arrayListOf<Operand>()
 		while (true) {
 			var name:String?
@@ -503,12 +503,12 @@ class Parser {
 		}
 	}
 
-	private fun getReturn (pos:Pair<Int,Int>): Operand {
+	private fun getReturn (pos:Position): Operand {
 		val value = this.getExpression(null, null, ';') as Operand
 		return Operand(pos, "return", OperandType.Return, arrayListOf(value))
 	}
 
-	private fun getTryCatchBlock (pos:Pair<Int,Int>): Operand {
+	private fun getTryCatchBlock (pos:Position): Operand {
 		val children = arrayListOf<Operand>()
 		val tryBlock = this.getControlBlock()
 		children.add(tryBlock)
@@ -530,12 +530,12 @@ class Parser {
 		return Operand(pos, "try", OperandType.Try, children)
 	}
 
-	private fun getThrow (pos:Pair<Int,Int>): Operand {
+	private fun getThrow (pos:Position): Operand {
 		val exception = this.getExpression(null, null, ';') as Operand
 		return Operand(pos, "throw", OperandType.Throw, arrayListOf(exception))
 	}
 
-	private fun getIfBlock (pos:Pair<Int,Int>): Operand {
+	private fun getIfBlock (pos:Position): Operand {
 		val children = arrayListOf<Operand>()
 		val condition = this.getExpression(null, null, this.parenthesisClose) as Operand
 		children.add(condition)
@@ -559,7 +559,7 @@ class Parser {
 		return Operand(pos, "if", OperandType.If, children)
 	}
 
-	private fun getSwitchBlock (pos:Pair<Int,Int>): Operand {
+	private fun getSwitchBlock (pos:Position): Operand {
 		val children = arrayListOf<Operand>()
 		val value = this.getExpression(null, null, this.parenthesisClose) as Operand
 		children.add(value)
@@ -614,13 +614,13 @@ class Parser {
 		return Operand(pos, "switch", OperandType.Switch, children)
 	}
 
-	private fun getWhileBlock (pos:Pair<Int,Int>): Operand {
+	private fun getWhileBlock (pos:Position): Operand {
 		val condition = this.getExpression(null, null, this.parenthesisClose) as Operand
 		val block = this.getControlBlock()
 		return Operand(pos, "while", OperandType.While, arrayListOf(condition, block))
 	}
 
-	private fun getForBlock (pos:Pair<Int,Int>): Operand {
+	private fun getForBlock (pos:Position): Operand {
 		val first = this.getExpression(null, null, "; ") as Operand
 		if (this.offset(-1) == ';') {
 			val condition = this.getExpression(null, null, ";") as Operand
@@ -640,7 +640,7 @@ class Parser {
 		throw Exception("expression for error")
 	}
 
-	private fun getFunctionBlock (pos:Pair<Int,Int>): Operand {
+	private fun getFunctionBlock (pos:Position): Operand {
 		val name = this.getValue()
 		if (this.current == this.parenthesisOpen) {
 			this.index += 1
@@ -694,13 +694,13 @@ class Parser {
 		}
 	}
 
-	private fun getIndexOperand (name: String, pos:Pair<Int,Int>): Operand {
+	private fun getIndexOperand (name: String, pos:Position): Operand {
 		val idx = this.getExpression(null, null, "]") as Operand
 		val operand = Operand(pos, name, OperandType.Var)
 		return Operand(pos, "[]", OperandType.Operator, arrayListOf(operand, idx))
 	}
 
-	private fun getEnum (value: String, pos:Pair<Int,Int>): Operand {
+	private fun getEnum (value: String, pos:Position): Operand {
 		if (value.contains('.') && this.model.isEnum(value)) {
 			val names = value.split('.')
 			val enumName = names[0]

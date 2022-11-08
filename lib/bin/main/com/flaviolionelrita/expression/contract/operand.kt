@@ -51,7 +51,7 @@ interface IPrototypeEvaluator : IEvaluator {
 }
 
 class Operand {
-    val pos: Pair<Int, Int>
+    val pos: Position
     val name: Any
     val type: OperandType
     val children: ArrayList<Operand>
@@ -60,7 +60,7 @@ class Operand {
     var number: Int? = null
     var id: String? = null
     constructor(
-            pos: Pair<Int, Int>,
+            pos: Position,
             name: Any,
             type: OperandType,
             children: ArrayList<Operand>?=null,

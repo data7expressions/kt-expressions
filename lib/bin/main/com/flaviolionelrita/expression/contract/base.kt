@@ -26,3 +26,4 @@ data class Sing(
 )
 
 data class Format(val name: String, val pattern: String, val regExp: Regex)
+data class Position(val ln: Int, val col: Int)
