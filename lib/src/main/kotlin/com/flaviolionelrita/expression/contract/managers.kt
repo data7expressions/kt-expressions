@@ -42,9 +42,11 @@ interface IModelManager {
     fun getFormat(name: String): Format
     fun getOperator(name: String, operands: Int?): OperatorMetadata
     fun getFunction(name: String): OperatorMetadata
-    fun priority(name: String, cardinality: Int?): Int
+    fun priority(name: Char, cardinality: Int?): Int
+    fun priority(name: String?, cardinality: Int?): Int
     fun isEnum(name: String): Boolean
     fun isConstant(name: String): Boolean
+    fun isOperator(name: Char, operands: Int?): Boolean 
     fun isOperator(name: String, operands: Int?): Boolean
     fun isFunction(name: String): Boolean
 }

@@ -1,4 +1,4 @@
-package com.flaviolionelrita.expression.Operand
+package com.flaviolionelrita.expression.operand
 
 import com.flaviolionelrita.expression.contract.*
 import com.flaviolionelrita.h3lp.h3lp
@@ -135,7 +135,13 @@ class ModelManager : IModelManager {
         }
         throw Exception("function: " + name + " not found")
     }
-    override fun priority(name: String, cardinality: Int?): Int { 
+    override fun priority(name: Char, cardinality: Int?): Int { 
+        return this.priority(name.toString(),cardinality)
+    }
+    override fun priority(name: String?, cardinality: Int?): Int { 
+        if(name == null) {
+            return -1
+        }
         val metadata = this.getOperator(name, cardinality)
         if (metadata.priority != null) {
             return metadata.priority 
@@ -148,6 +154,9 @@ class ModelManager : IModelManager {
     }
     override fun isConstant(name: String): Boolean { 
         return this._constants.find { it.first == name } != null
+    }
+    override fun isOperator(name: Char, operands: Int?): Boolean {
+        return this.isOperator(name.toString(), operands)
     }
     override fun isOperator(name: String, operands: Int?): Boolean { 
         if (operands != null) {
@@ -162,7 +171,7 @@ class ModelManager : IModelManager {
 		val buffer = sing.toCharArray().toTypedArray()
 		val length = buffer.size
 		var index = 0
-		var functionName = ""       
+		var functionName:String     
 		var prefix = ""
 		var _return = ""
 		var chars: ArrayList<String> = arrayListOf<String>()

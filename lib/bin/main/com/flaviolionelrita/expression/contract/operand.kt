@@ -63,13 +63,13 @@ class Operand {
             pos: Pair<Int, Int>,
             name: Any,
             type: OperandType,
-            children: ArrayList<Operand> = arrayListOf<Operand>(),
-            returnType: Type? = null
+            children: ArrayList<Operand>?=null,
+            returnType: Type?=null
     ) {
         this.pos = pos
         this.name = name
         this.type = type
-        this.children = children
+        this.children = children?:arrayListOf<Operand>()
         this.returnType = returnType
     }
     fun eval(context: Context): Any ? {

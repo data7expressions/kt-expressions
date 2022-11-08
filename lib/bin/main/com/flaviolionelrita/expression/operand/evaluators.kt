@@ -1,4 +1,4 @@
-package com.flaviolionelrita.expression.Operand
+package com.flaviolionelrita.expression.operand
 
 import com.flaviolionelrita.expression.contract.*
 import com.flaviolionelrita.h3lp.h3lp

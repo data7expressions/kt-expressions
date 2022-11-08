@@ -87,8 +87,8 @@ class UtilsHelper(val obj: ObjectHelper, val validator: Validator) {
 		var isVar = false
 		var close: Char = ' '
         var index = 0
-        val parenthesisOpen = "{".toCharArray()[0]
-        val parenthesisClose= "}".toCharArray()[0]
+        val keyOpen = "{".toCharArray()[0]
+        val keyClose= "}".toCharArray()[0]
         while(index < length) {       	
 			val current = buffer[index]
 			if (isVar) {
@@ -108,11 +108,11 @@ class UtilsHelper(val obj: ObjectHelper, val validator: Validator) {
 			} else if (
 				index < length - 1 &&
 				current == '$' &&
-				buffer[index + 1] == parenthesisOpen
+				buffer[index + 1] == keyOpen
 			) {
 				// Example: ${XXX}
 				isVar = true
-				close = parenthesisClose
+				close = keyClose
 				index++
 			} else if (
 				index < length - 1 &&
@@ -128,7 +128,7 @@ class UtilsHelper(val obj: ObjectHelper, val validator: Validator) {
             index++
 		}
 		if (chars.size > 0) {
-			if (close == parenthesisClose) {
+			if (close == keyClose) {
 				// Example: 'words ${XXXX'
 				result.add("\${")
 				result.add(chars.joinToString())
