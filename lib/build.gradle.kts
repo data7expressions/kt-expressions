@@ -12,6 +12,7 @@ plugins {
     kotlin("jvm") version "1.7.20"
 }
 
+group = "com.flaviolionelrita"
 version = "0.1.0"
 
 application {
