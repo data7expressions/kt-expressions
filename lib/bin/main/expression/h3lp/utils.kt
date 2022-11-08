@@ -41,16 +41,12 @@ class UtilsHelper(val obj: ObjectHelper, val validator: Validator) {
         return ContextReplacer(this.obj)
     }
 
-    public fun template (template: Any, replacer: Any, parse: Boolean?): String {
+    public fun template (template: Any, replacer: Any, parse: Boolean= false): String {
         return this.template(template, this.createContextReplacer().context(replacer), parse)
     } 
 
-    public fun template (template: Any, replacer: IReplacer, parse: Boolean?): String {
-		val _parse:Boolean = parse?:false        
-        val result = this.anyTemplate(template, replacer, _parse)
-        if (result == null) {
-            return ""
-        }
+    public fun template (template: Any, replacer: IReplacer, parse: Boolean= false): String {
+        val result = this.anyTemplate(template, replacer, parse)        
         return result as String
 	}
 
@@ -86,8 +82,8 @@ class UtilsHelper(val obj: ObjectHelper, val validator: Validator) {
     private fun stringTemplate(template: String, replacer: IReplacer): String {
         val buffer = template.toCharArray().toTypedArray()
 		val length = buffer.size
-		val result = mutableListOf<String>()
-		var chars = mutableListOf<String>()
+		val result = arrayListOf<String>()
+		var chars = arrayListOf<String>()
 		var isVar = false
 		var close: Char = ' '
         var index = 0

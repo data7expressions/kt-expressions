@@ -4,10 +4,12 @@ open class H3lp {
     val http: HttpHelper
     val validator: Validator
     val obj: ObjectHelper
+    val utils: UtilsHelper
     constructor() {
         this.http = HttpHelper()
         this.validator = Validator()
         this.obj = ObjectHelper(this.http, this.validator)
+        this.utils = UtilsHelper(this.obj, this.validator)
     }
 }
 

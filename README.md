@@ -22,3 +22,6 @@ curl -sS https://keybase.io/ktlint/pgp_keys.asc | gpg --import && gpg --verify k
 
 Add Extension : cstef.kotlin-formatter
 
+## Problems with java
+
+- [uninstall one version](https://linuxize.com/post/install-java-on-ubuntu-18-04/)

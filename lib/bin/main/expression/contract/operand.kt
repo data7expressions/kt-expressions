@@ -1,4 +1,5 @@
 package expression.contract
+import kotlin.reflect.KFunction
 
 enum class OperandType(val key: String) {
     Const("Const"),
@@ -94,6 +95,6 @@ data class OperatorMetadata(
         val returnType: String,
         val doc: OperatorDoc?,
         val priority: Int?,
-        val function: Any,
+        val function: KFunction<*>?,
         val custom: IPrototypeEvaluator?
 )

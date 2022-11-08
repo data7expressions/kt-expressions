@@ -20,7 +20,7 @@ data class Parameter(
 
 data class Sing(
         val name: String,
-        val params: Array<Parameter>,
+        val params: List<Parameter>,
         val returnType: String,
         val isAsync: Boolean
 )

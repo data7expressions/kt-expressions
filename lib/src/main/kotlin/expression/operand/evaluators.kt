@@ -1,6 +1,8 @@
 package expression.Operand
 import expression.contract.*
 import h3lp.h3lp
+import h3lp.IReplacer
+import kotlin.reflect.*
 
 class valEvaluator(val operand:Operand) : IEvaluator {
 	override fun eval (context: Context): Any ? {
@@ -31,9 +33,23 @@ class EnvEvaluator(val operand:Operand) : IEvaluator {
 		return System.getenv(this.operand.name as String)
 	}
 }
+
+class TemplateReplacer(val context: Context): IReplacer {
+
+	override fun replace (match: String): String? {
+		var value = System.getenv(match)
+		if (value == null) {
+			value = this.context.data.get(match) as String?
+		}
+		if(value == null) {
+			return match
+		}
+		return value
+	}
+}
 class TemplateEvaluator(val operand:Operand) : IEvaluator {
 	override fun eval (context: Context): Any ? {
-		TODO()
+		return h3lp.utils.template(this.operand.name.toString(), TemplateReplacer(context))
 	}
 }
 class PropertyEvaluator(val operand:Operand) : IEvaluator {
@@ -61,18 +77,17 @@ class ObjEvaluator(val operand:Operand) : IEvaluator {
 		return obj
 	}
 }
-// https://stackoverflow.com/questions/42910791/idiomatic-way-to-invoke-methods-through-reflection-in-kotlin
-// https://levelup.gitconnected.com/understanding-reflection-using-kotlin-a5874bf63010
+// https://youtrack.jetbrains.com/issue/KT-8827/Kotlin-Reflection-Callable-FunctionCaller-needs-to-be-able-to-handle-default-parameters
 // https://www.baeldung.com/kotlin/reflection
-// class CallFuncEvaluator(val operand:Operand, val _function: Any) : IEvaluator {	
-// 	override fun eval (context: Context): Any ? {
-// 		val args = mutableListOf<Any ?>()
-// 		for (child in this.operand.children) {
-// 			args.add(child.eval(context))
-// 		}
-// 		return this._function(...args)
-// 	}
-// }
+class CallFuncEvaluator(val operand:Operand, val function: KFunction<*>) : IEvaluator {	
+	override fun eval (context: Context): Any ? {
+		val args = mutableListOf<Any ?>()
+		for (child in this.operand.children) {
+			args.add(child.eval(context))
+		}
+		return this.function.call(args)
+	}
+}
 class BlockEvaluator(val operand:Operand) : IEvaluator {
 	override fun eval (context: Context): Any ? {
 		var lastValue:Any ?= null
